@@ -8,65 +8,120 @@
 <style>
   :root {
     color-scheme: light only;
-    --bg: #fafaf7;
-    --surface: #ffffff;
-    --text: #2c2c2a;
-    --text-secondary: #5f5e5a;
-    --text-tertiary: #888780;
-    --border: rgba(0, 0, 0, 0.12);
-    --border-strong: rgba(0, 0, 0, 0.2);
-    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+    --bg-base: #f5ede0;
+    --bg-tint: #e8d9c0;
+    --surface: #fffdf8;
+    --text: #3d2a1a;
+    --text-secondary: #6b5440;
+    --text-tertiary: #9a8770;
+    --border: rgba(61, 42, 26, 0.15);
+    --border-strong: rgba(61, 42, 26, 0.28);
+    --accent: #b8693a;
+    --accent-soft: #d89668;
+    --shadow: 0 2px 8px rgba(120, 80, 40, 0.06), 0 1px 3px rgba(120, 80, 40, 0.08);
   }
   * { box-sizing: border-box; }
-  html, body { background: #fafaf7; }
+  html, body { background: #f5ede0; min-height: 100vh; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     color: var(--text);
     margin: 0;
     padding: 2rem 1rem;
     line-height: 1.6;
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(184, 105, 58, 0.06) 0%, transparent 35%),
+      radial-gradient(circle at 85% 70%, rgba(120, 80, 40, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 50% 95%, rgba(184, 105, 58, 0.04) 0%, transparent 45%);
+    background-attachment: fixed;
   }
-  .wrap { max-width: 900px; margin: 0 auto; }
+  .wrap { max-width: 900px; margin: 0 auto; position: relative; }
   header {
     margin-bottom: 2rem;
     padding-bottom: 1.5rem;
-    border-bottom: 0.5px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    position: relative;
   }
-  h1 { font-size: 24px; font-weight: 500; margin: 0 0 0.25rem; color: var(--text); }
-  h2 { font-size: 18px; font-weight: 500; margin: 2rem 0 0.5rem; color: var(--text); }
-  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0; }
+  header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    border-radius: 2px;
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 500;
+    margin: 1rem 0 0.25rem;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+  h2 {
+    font-size: 18px;
+    font-weight: 500;
+    margin: 2rem 0 0.5rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  h2::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0; font-style: italic; }
   nav {
     margin-top: 1rem;
     display: flex;
-    gap: 1rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
   nav a {
     color: var(--text-secondary);
     text-decoration: none;
-    font-size: 14px;
-    padding: 6px 12px;
-    border: 0.5px solid var(--border);
-    border-radius: 6px;
-    transition: all 0.15s;
+    font-size: 13px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    transition: all 0.2s;
     background: var(--surface);
   }
   nav a:hover {
-    border-color: var(--border-strong);
-    color: var(--text);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
   }
   .card {
     background: var(--surface);
-    border: 0.5px solid var(--border);
-    border-radius: 12px;
-    padding: 1.5rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.75rem;
     margin: 1rem 0 2rem;
     box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 50%, transparent 100%);
   }
   .card-intro {
     font-size: 14px;
     color: var(--text-secondary);
     margin: 0 0 1.5rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--accent-soft);
   }
   .c-gray rect, .c-gray circle, .c-gray ellipse { fill: #F1EFE8; stroke: #5F5E5A; }
   .c-blue rect, .c-blue circle, .c-blue ellipse { fill: #E6F1FB; stroke: #185FA5; }
@@ -82,28 +137,36 @@
   .c-coral .t, .c-coral .th { fill: #712B13; } .c-coral .ts { fill: #993C1D; }
   .t  { font: 500 14px sans-serif; }
   .th { font: 500 14px sans-serif; }
-  .ts { font: 400 12px sans-serif; fill: #5f5e5a; }
-  .arr { stroke: #5f5e5a; stroke-width: 1.5; fill: none; }
+  .ts { font: 400 12px sans-serif; fill: #6b5440; }
+  .arr { stroke: #6b5440; stroke-width: 1.5; fill: none; }
   .node { cursor: default; transition: opacity 0.15s; }
   .node:hover { opacity: 0.85; }
   .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .tbl th, .tbl td { padding: 10px 12px; text-align: left; border-bottom: 0.5px solid var(--border); vertical-align: top; }
-  .tbl thead th { font-weight: 500; color: var(--text-secondary); background: rgba(0,0,0,0.02); border-bottom: 0.5px solid var(--border-strong); }
-  .tbl tbody tr:hover { background: rgba(0,0,0,0.02); }
+  .tbl th, .tbl td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .tbl thead th { font-weight: 500; color: var(--text-secondary); background: rgba(184, 105, 58, 0.05); border-bottom: 1px solid var(--border-strong); }
+  .tbl tbody tr:hover { background: rgba(184, 105, 58, 0.04); }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; margin-right: 4px; }
   .p-s1  { background: #EEEDFE; color: #3C3489; }
   .p-s2  { background: #FBEAF0; color: #72243E; }
   .p-s3  { background: #FAECE7; color: #712B13; }
   .p-raw { background: #F1EFE8; color: #444441; }
-  .done { color: #0F6E56; font-size: 11px; }
-  .pend { color: #854F0B; font-size: 11px; }
+  .done { color: #0F6E56; font-size: 11px; font-weight: 500; }
+  .pend { color: #854F0B; font-size: 11px; font-weight: 500; }
   .todo { color: var(--text-tertiary); font-size: 11px; font-style: italic; }
   footer {
     margin-top: 3rem;
     padding-top: 1.5rem;
-    border-top: 0.5px solid var(--border);
+    border-top: 1px solid var(--border);
     font-size: 13px;
     color: var(--text-tertiary);
+    text-align: center;
+  }
+  footer::before {
+    content: "✦";
+    display: block;
+    color: var(--accent-soft);
+    margin-bottom: 1rem;
+    font-size: 16px;
   }
 </style>
 </head>
@@ -130,7 +193,7 @@
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
     </defs>
 
-    <text class="th" x="40" y="32" fill="#2c2c2a">Calcined clay geopolymer thesis</text>
+    <text class="th" x="40" y="32" fill="#3d2a1a">Calcined clay geopolymer thesis</text>
     <text class="ts" x="40" y="50">Three sequential stages, Şile clays K1 / K4 / K5</text>
 
     <g class="c-gray">
@@ -139,7 +202,7 @@
     <text class="ts" x="340" y="112" text-anchor="middle" dominant-baseline="central">K1 foundry waste · K4 high iron · K5 low iron · OPC · sand</text>
     </g>
 
-    <text class="th" x="40" y="160" fill="#2c2c2a">Characterization</text>
+    <text class="th" x="40" y="160" fill="#3d2a1a">Characterization</text>
     <g class="c-blue">
     <rect x="40" y="174" width="140" height="44" rx="8" stroke-width="0.5"/>
     <text class="th" x="110" y="196" text-anchor="middle" dominant-baseline="central">XRD · XRF</text>
@@ -183,7 +246,7 @@
     <text class="ts" x="340" y="434" text-anchor="middle" dominant-baseline="central">Flexural &amp; compressive strength · 75% SAI benchmark</text>
     </g>
 
-    <text class="th" x="40" y="486" fill="#2c2c2a">Durability on SAI samples (28 &amp; 90 day cured)</text>
+    <text class="th" x="40" y="486" fill="#3d2a1a">Durability on SAI samples (28 &amp; 90 day cured)</text>
     <g class="c-teal">
     <rect x="40" y="500" width="190" height="56" rx="8" stroke-width="0.5"/>
     <text class="th" x="135" y="518" text-anchor="middle" dominant-baseline="central">Capillary absorption</text>
@@ -286,7 +349,7 @@
 </section>
 
 <footer>
-  <p>Last updated: May 2026 · MSc thesis · Calcined clay geopolymers from Şile waste clays</p>
+  <p>MSc thesis · Calcined clay geopolymers from Şile waste clays · Updated May 2026</p>
 </footer>
 
 </div>
