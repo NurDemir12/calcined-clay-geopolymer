@@ -65,43 +65,65 @@
     padding-left: 1rem; border-left: 2px solid var(--accent-soft);
   }
 
-  /* Materials grid */
-  .matrix {
+  /* Materials figure */
+  .clays-container {
     display: grid;
-    grid-template-columns: 70px repeat(5, 1fr);
-    gap: 8px;
-    margin: 0 0 1rem;
+    grid-template-columns: 50px 1fr;
+    gap: 0;
+    align-items: stretch;
+    margin: 0 0 0.5rem;
   }
-  .matrix-header {
+  .row-side-labels {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    text-align: right;
+    padding-right: 0.75rem;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+  }
+  .clays-figure {
+    width: 100%;
+  }
+  .clays-figure img {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    mix-blend-mode: multiply;
+  }
+  .col-labels {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    margin: 0.5rem 0 0 50px;
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     font-weight: 500;
     color: var(--text-tertiary);
     text-align: center;
-    padding: 4px 0;
   }
-  .matrix-row-label {
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text);
+  .col-labels span {
+    padding: 6px 4px;
+    border-top: 2px solid var(--accent-soft);
+  }
+  .read-hint {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding-right: 8px;
-    border-right: 2px solid var(--accent-soft);
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 0.75rem 0 0 50px;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    font-style: italic;
   }
-  .clay-cell {
-    aspect-ratio: 1;
-    overflow: hidden;
-    border-radius: 50%;
-    position: relative;
-  }
-  .clay-cell img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+  .read-hint::before, .read-hint::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
   .clay-rows-intro {
     display: grid;
@@ -181,9 +203,10 @@
 
   @media (max-width: 600px) {
     .clay-rows-intro { grid-template-columns: 1fr; }
-    .matrix { grid-template-columns: 50px repeat(5, 1fr); gap: 4px; }
-    .matrix-header { font-size: 9px; }
-    .matrix-row-label { font-size: 12px; }
+    .clays-container { grid-template-columns: 35px 1fr; }
+    .row-side-labels { font-size: 12px; padding-right: 0.5rem; }
+    .col-labels { margin-left: 35px; font-size: 9px; }
+    .read-hint { margin-left: 35px; }
   }
 </style>
 </head>
@@ -206,35 +229,26 @@
   <div class="card">
     <p class="card-intro">Each row shows one clay across its full processing sequence. Reading right to left: raw ungrinded chunks straight from source, then ground raw, then ground &amp; calcined at 600, 700, and 800 °C. Color shifts visibly with calcination as iron oxides dehydrate and re-oxidize.</p>
 
-    <div class="matrix">
-      <div class="matrix-header"></div>
-      <div class="matrix-header">800 °C</div>
-      <div class="matrix-header">700 °C</div>
-      <div class="matrix-header">600 °C</div>
-      <div class="matrix-header">Raw, ground</div>
-      <div class="matrix-header">Raw, chunks</div>
-
-      <div class="matrix-row-label">K1</div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K1 800°C" style="object-position: 6.5% 16.67%; transform: scale(5); transform-origin: 6.5% 16.67%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K1 700°C" style="object-position: 25.5% 16.67%; transform: scale(5); transform-origin: 25.5% 16.67%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K1 600°C" style="object-position: 44.5% 16.67%; transform: scale(5); transform-origin: 44.5% 16.67%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K1 ground raw" style="object-position: 63.5% 16.67%; transform: scale(5); transform-origin: 63.5% 16.67%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K1 raw chunks" style="object-position: 91.5% 16.67%; transform: scale(5); transform-origin: 91.5% 16.67%;"></div>
-
-      <div class="matrix-row-label">K4</div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K4 800°C" style="object-position: 6.5% 50%; transform: scale(5); transform-origin: 6.5% 50%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K4 700°C" style="object-position: 25.5% 50%; transform: scale(5); transform-origin: 25.5% 50%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K4 600°C" style="object-position: 44.5% 50%; transform: scale(5); transform-origin: 44.5% 50%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K4 ground raw" style="object-position: 63.5% 50%; transform: scale(5); transform-origin: 63.5% 50%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K4 raw chunks" style="object-position: 91.5% 50%; transform: scale(5); transform-origin: 91.5% 50%;"></div>
-
-      <div class="matrix-row-label">K5</div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K5 800°C" style="object-position: 6.5% 83.33%; transform: scale(5); transform-origin: 6.5% 83.33%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K5 700°C" style="object-position: 25.5% 83.33%; transform: scale(5); transform-origin: 25.5% 83.33%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K5 600°C" style="object-position: 44.5% 83.33%; transform: scale(5); transform-origin: 44.5% 83.33%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K5 ground raw" style="object-position: 63.5% 83.33%; transform: scale(5); transform-origin: 63.5% 83.33%;"></div>
-      <div class="clay-cell"><img src="images/clays-progression.png" alt="K5 raw chunks" style="object-position: 91.5% 83.33%; transform: scale(5); transform-origin: 91.5% 83.33%;"></div>
+    <div class="clays-container">
+      <div class="row-side-labels">
+        <span>K1</span>
+        <span>K4</span>
+        <span>K5</span>
+      </div>
+      <div class="clays-figure">
+        <img src="images/clays-progression.png" alt="Three clays (K1, K4, K5) shown raw and after calcination at 600, 700, and 800 °C">
+      </div>
     </div>
+
+    <div class="col-labels">
+      <span>800 °C</span>
+      <span>700 °C</span>
+      <span>600 °C</span>
+      <span>Raw</span>
+      <span>Raw</span>
+    </div>
+
+    <div class="read-hint">read each row right → left</div>
 
     <div class="clay-rows-intro">
       <div class="clay-row-info">
