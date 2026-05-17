@@ -8,93 +8,76 @@
 <style>
   :root {
     color-scheme: light only;
-    --bg-base: #f4f6f9;
-    --surface: #ffffff;
-    --text: #1a2332;
-    --text-secondary: #4a5670;
-    --text-tertiary: #8896ab;
-    --border: rgba(26, 35, 50, 0.10);
-    --border-strong: rgba(26, 35, 50, 0.22);
-    --accent: #2c5fb4;
-    --accent-soft: #5a8cd6;
-    --shadow: 0 4px 12px rgba(26, 35, 50, 0.04), 0 1px 3px rgba(26, 35, 50, 0.06);
+    --bg-base: #f5ede0;
+    --bg-tint: #e8d9c0;
+    --surface: #fffdf8;
+    --text: #3d2a1a;
+    --text-secondary: #6b5440;
+    --text-tertiary: #9a8770;
+    --border: rgba(61, 42, 26, 0.15);
+    --border-strong: rgba(61, 42, 26, 0.28);
+    --accent: #b8693a;
+    --accent-soft: #d89668;
+    --shadow: 0 2px 8px rgba(120, 80, 40, 0.06), 0 1px 3px rgba(120, 80, 40, 0.08);
   }
   * { box-sizing: border-box; }
-  html, body { background: #f4f6f9; min-height: 100vh; }
+  html, body { background: #f5ede0; min-height: 100vh; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
     color: var(--text);
     margin: 0;
     padding: 2rem 1rem;
     line-height: 1.6;
-    background-image: radial-gradient(circle, rgba(44, 95, 180, 0.12) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image:
+      radial-gradient(circle at 20% 15%, rgba(184, 105, 58, 0.06) 0%, transparent 35%),
+      radial-gradient(circle at 85% 70%, rgba(120, 80, 40, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at 50% 95%, rgba(184, 105, 58, 0.04) 0%, transparent 45%);
     background-attachment: fixed;
   }
   .wrap { max-width: 900px; margin: 0 auto; position: relative; }
   header {
     margin-bottom: 2rem;
-    padding: 2rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    box-shadow: var(--shadow);
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
     position: relative;
-    overflow: hidden;
   }
   header::before {
     content: "";
     position: absolute;
+    left: 0;
     top: 0;
-    right: 0;
-    width: 220px;
-    height: 100%;
-    background: linear-gradient(135deg, transparent 0%, rgba(44, 95, 180, 0.04) 50%, rgba(44, 95, 180, 0.08) 100%);
-    pointer-events: none;
-  }
-  .badge {
-    display: inline-block;
-    padding: 4px 10px;
-    background: rgba(44, 95, 180, 0.1);
-    color: var(--accent);
-    border-radius: 999px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 0.75rem;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    border-radius: 2px;
   }
   h1 {
-    font-size: 28px;
+    font-size: 26px;
     font-weight: 500;
-    margin: 0 0 0.5rem;
+    margin: 1rem 0 0.25rem;
     color: var(--text);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
   }
   h2 {
-    font-size: 19px;
+    font-size: 18px;
     font-weight: 500;
-    margin: 2.5rem 0 0.75rem;
+    margin: 2rem 0 0.5rem;
     color: var(--text);
     display: flex;
     align-items: center;
     gap: 0.6rem;
   }
-  h2 .num {
-    width: 26px;
-    height: 26px;
+  h2::before {
+    content: "";
+    width: 8px;
+    height: 8px;
     background: var(--accent);
-    color: white;
-    border-radius: 8px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 500;
+    border-radius: 50%;
+    display: inline-block;
   }
-  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0; }
+  .subtitle { color: var(--text-secondary); font-size: 14px; margin: 0; font-style: italic; }
   nav {
-    margin-top: 1.25rem;
+    margin-top: 1rem;
     display: flex;
     gap: 0.6rem;
     flex-wrap: wrap;
@@ -103,33 +86,42 @@
     color: var(--text-secondary);
     text-decoration: none;
     font-size: 13px;
-    padding: 7px 14px;
+    padding: 6px 14px;
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: 999px;
     transition: all 0.2s;
-    background: rgba(255, 255, 255, 0.6);
+    background: var(--surface);
   }
   nav a:hover {
     border-color: var(--accent);
     color: var(--accent);
-    background: white;
+    transform: translateY(-1px);
   }
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: 14px;
     padding: 1.75rem;
     margin: 1rem 0 2rem;
     box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-soft) 50%, transparent 100%);
   }
   .card-intro {
     font-size: 14px;
     color: var(--text-secondary);
     margin: 0 0 1.5rem;
-    padding: 0.75rem 1rem;
-    background: rgba(44, 95, 180, 0.04);
-    border-left: 3px solid var(--accent);
-    border-radius: 0 8px 8px 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--accent-soft);
   }
   .c-gray rect, .c-gray circle, .c-gray ellipse { fill: #F1EFE8; stroke: #5F5E5A; }
   .c-blue rect, .c-blue circle, .c-blue ellipse { fill: #E6F1FB; stroke: #185FA5; }
@@ -145,14 +137,14 @@
   .c-coral .t, .c-coral .th { fill: #712B13; } .c-coral .ts { fill: #993C1D; }
   .t  { font: 500 14px sans-serif; }
   .th { font: 500 14px sans-serif; }
-  .ts { font: 400 12px sans-serif; fill: #4a5670; }
-  .arr { stroke: #4a5670; stroke-width: 1.5; fill: none; }
+  .ts { font: 400 12px sans-serif; fill: #6b5440; }
+  .arr { stroke: #6b5440; stroke-width: 1.5; fill: none; }
   .node { cursor: default; transition: opacity 0.15s; }
   .node:hover { opacity: 0.85; }
   .tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
   .tbl th, .tbl td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: top; }
-  .tbl thead th { font-weight: 500; color: var(--text-secondary); background: rgba(44, 95, 180, 0.04); border-bottom: 1px solid var(--border-strong); text-transform: uppercase; font-size: 11px; letter-spacing: 0.05em; }
-  .tbl tbody tr:hover { background: rgba(44, 95, 180, 0.03); }
+  .tbl thead th { font-weight: 500; color: var(--text-secondary); background: rgba(184, 105, 58, 0.05); border-bottom: 1px solid var(--border-strong); }
+  .tbl tbody tr:hover { background: rgba(184, 105, 58, 0.04); }
   .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 500; margin-right: 4px; }
   .p-s1  { background: #EEEDFE; color: #3C3489; }
   .p-s2  { background: #FBEAF0; color: #72243E; }
@@ -163,13 +155,18 @@
   .todo { color: var(--text-tertiary); font-size: 11px; font-style: italic; }
   footer {
     margin-top: 3rem;
-    padding: 1.5rem;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
     font-size: 13px;
     color: var(--text-tertiary);
     text-align: center;
+  }
+  footer::before {
+    content: "✦";
+    display: block;
+    color: var(--accent-soft);
+    margin-bottom: 1rem;
+    font-size: 16px;
   }
 </style>
 </head>
@@ -177,17 +174,16 @@
 <div class="wrap">
 
 <header>
-  <span class="badge">MSc Thesis · 2026</span>
   <h1>Calcined clay geopolymer thesis</h1>
-  <p class="subtitle">Şile clays K1, K4, K5 · Istanbul Technical University</p>
+  <p class="subtitle">MSc thesis · Şile clays K1, K4, K5 · Istanbul</p>
   <nav>
-    <a href="#flowchart">→ Flowchart</a>
-    <a href="#test-map">→ Test map</a>
+    <a href="#flowchart">Flowchart</a>
+    <a href="#test-map">Test map</a>
   </nav>
 </header>
 
 <section id="flowchart">
-  <h2><span class="num">1</span> Three-stage experimental flowchart</h2>
+  <h2>Three-stage experimental flowchart</h2>
   <div class="card">
     <p class="card-intro">Stage 1 (SAI screening) determines optimum calcination temperature per clay. Stage 2 (activator screening on K4 at 700 °C) determines the activator and dosage. Both feed Stage 3, the final geopolymer mixtures.</p>
     <svg width="100%" viewBox="0 0 680 1080" role="img" xmlns="http://www.w3.org/2000/svg">
@@ -197,7 +193,7 @@
     <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
     </defs>
 
-    <text class="th" x="40" y="32" fill="#1a2332">Calcined clay geopolymer thesis</text>
+    <text class="th" x="40" y="32" fill="#3d2a1a">Calcined clay geopolymer thesis</text>
     <text class="ts" x="40" y="50">Three sequential stages, Şile clays K1 / K4 / K5</text>
 
     <g class="c-gray">
@@ -206,7 +202,7 @@
     <text class="ts" x="340" y="112" text-anchor="middle" dominant-baseline="central">K1 foundry waste · K4 high iron · K5 low iron · OPC · sand</text>
     </g>
 
-    <text class="th" x="40" y="160" fill="#1a2332">Characterization</text>
+    <text class="th" x="40" y="160" fill="#3d2a1a">Characterization</text>
     <g class="c-blue">
     <rect x="40" y="174" width="140" height="44" rx="8" stroke-width="0.5"/>
     <text class="th" x="110" y="196" text-anchor="middle" dominant-baseline="central">XRD · XRF</text>
@@ -250,7 +246,7 @@
     <text class="ts" x="340" y="434" text-anchor="middle" dominant-baseline="central">Flexural &amp; compressive strength · 75% SAI benchmark</text>
     </g>
 
-    <text class="th" x="40" y="486" fill="#1a2332">Durability on SAI samples (28 &amp; 90 day cured)</text>
+    <text class="th" x="40" y="486" fill="#3d2a1a">Durability on SAI samples (28 &amp; 90 day cured)</text>
     <g class="c-teal">
     <rect x="40" y="500" width="190" height="56" rx="8" stroke-width="0.5"/>
     <text class="th" x="135" y="518" text-anchor="middle" dominant-baseline="central">Capillary absorption</text>
@@ -319,7 +315,7 @@
 </section>
 
 <section id="test-map">
-  <h2><span class="num">2</span> Test &amp; characterization map</h2>
+  <h2>Test &amp; characterization map</h2>
   <div class="card">
     <p class="card-intro">Every test mapped to its target sample group and current status. Use this when writing the methods section to confirm every test has its specimen group.</p>
     <table class="tbl">
