@@ -195,6 +195,30 @@
   .pend { color: #854F0B; font-size: 11px; font-weight: 500; }
   .todo { color: var(--text-tertiary); font-size: 11px; font-style: italic; }
 
+  /* Sulfate attack section */
+  .sa-chart-wrap { position: relative; width: 100%; }
+  .sa-legend {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    margin: 0.75rem 0 0; padding: 0.75rem 1rem;
+    background: rgba(184, 105, 58, 0.05);
+    border: 1px solid var(--border); border-radius: 8px;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  .sa-legend span { display: flex; align-items: center; gap: 6px; }
+  .sa-sw { display: inline-block; width: 18px; height: 3px; border-radius: 2px; }
+  .sa-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-top: 1rem;
+  }
+  .sa-panel {
+    background: rgba(184, 105, 58, 0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 1rem;
+  }
+  .sa-panel-wide { grid-column: span 2; }
+  .sa-panel-title {
+    font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 0.6rem;
+  }
+
   footer {
     margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
     font-size: 13px; color: var(--text-tertiary); text-align: center;
@@ -207,6 +231,8 @@
     .row-side-labels { font-size: 12px; padding-right: 0.5rem; }
     .col-labels { margin-left: 35px; font-size: 9px; }
     .read-hint { margin-left: 35px; }
+    .sa-grid { grid-template-columns: 1fr; }
+    .sa-panel-wide { grid-column: span 1; }
   }
 </style>
 </head>
@@ -221,6 +247,7 @@
     <a href="#conferences">Conferences</a>
     <a href="#flowchart">Flowchart</a>
     <a href="#test-map">Test map</a>
+    <a href="#sulfate">Sulfate attack</a>
   </nav>
 </header>
 
@@ -458,10 +485,189 @@
   </div>
 </section>
 
+<section id="sulfate">
+  <h2>Sulfate attack — mass change over time</h2>
+  <div class="card">
+    <p class="card-intro">Stage 1 durability test: SAI samples immersed in 5% Na₂SO₄ solution. Mass tracked weekly for 56 days. Each line is the average of two replicate prisms. Lines stop where measurements have not yet been taken. Mass <i>gain</i> = sulfate ingress and ettringite/gypsum formation; mass <i>loss</i> = matrix degradation and spalling.</p>
+
+    <h3 style="margin-top: 0.5rem;">All samples</h3>
+    <div class="sa-chart-wrap" style="height: 360px;">
+      <canvas id="sa-all" role="img" aria-label="Mass change versus time for all 15 sulfate attack samples">All samples mass change versus time.</canvas>
+    </div>
+    <div class="sa-legend">
+      <span><span class="sa-sw" style="background:#A32D2D"></span>C1 reference (cement)</span>
+      <span><span class="sa-sw" style="background:#BA7517"></span>Raw clays (K10/K40/K50)</span>
+      <span><span class="sa-sw" style="background:#534AB7"></span>K1 series (K16/K17/K18)</span>
+      <span><span class="sa-sw" style="background:#1D9E75"></span>K4 series (K46/K47/K48)</span>
+      <span><span class="sa-sw" style="background:#185FA5"></span>K5 series (K56/K57/K58)</span>
+    </div>
+
+    <h3 style="margin-top: 2rem;">Per-group trajectories</h3>
+    <div class="sa-grid">
+      <div class="sa-panel">
+        <div class="sa-panel-title">C1-56D reference (plain cement)</div>
+        <div class="sa-chart-wrap" style="height: 220px;">
+          <canvas id="sa-c1" role="img" aria-label="C1 reference cement mass change">C1 reference.</canvas>
+        </div>
+      </div>
+      <div class="sa-panel">
+        <div class="sa-panel-title">K1 series (600 / 700 / 800 °C)</div>
+        <div class="sa-chart-wrap" style="height: 220px;">
+          <canvas id="sa-k1" role="img" aria-label="K1 series mass change">K1 series.</canvas>
+        </div>
+      </div>
+      <div class="sa-panel">
+        <div class="sa-panel-title">K4 series (600 / 700 / 800 °C)</div>
+        <div class="sa-chart-wrap" style="height: 220px;">
+          <canvas id="sa-k4" role="img" aria-label="K4 series mass change">K4 series.</canvas>
+        </div>
+      </div>
+      <div class="sa-panel">
+        <div class="sa-panel-title">K5 series (600 / 700 / 800 °C)</div>
+        <div class="sa-chart-wrap" style="height: 220px;">
+          <canvas id="sa-k5" role="img" aria-label="K5 series mass change">K5 series.</canvas>
+        </div>
+      </div>
+      <div class="sa-panel sa-panel-wide">
+        <div class="sa-panel-title">Raw clays (uncalcined K1 / K4 / K5 + cement)</div>
+        <div class="sa-chart-wrap" style="height: 240px;">
+          <canvas id="sa-raw" role="img" aria-label="Raw uncalcined clays mass change">Raw clays.</canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
-  <p>MSc thesis · Calcined clay geopolymers from Şile waste clays · Updated 17 May 2026</p>
+  <p>MSc thesis · Calcined clay geopolymers from Şile waste clays · Updated 26 May 2026</p>
 </footer>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+(function(){
+  const days = [0, 7, 14, 21, 28, 35, 42, 49, 56];
+
+  const data = {
+    'C1-1':  [0.0000, 0.0017, 0.0031, 0.0039, 0.0048, null,   null,   null,   null],
+    'C1-2':  [0.0000, 0.0017, 0.0031, 0.0040, 0.0049, null,   null,   null,   null],
+    'C1-3':  [0.0000, 0.0019, 0.0033, 0.0041, 0.0051, null,   null,   null,   null],
+    'K16':   [0.0000, 0.0014, 0.0016, 0.0031, 0.0020, 0.0029, 0.0028, 0.0034, null],
+    'K17':   [0.0000, 0.0016, 0.0019, 0.0034, 0.0019, 0.0029, 0.0028, 0.0032, null],
+    'K18':   [0.0000, 0.0023, 0.0020, 0.0027, 0.0019, 0.0027, 0.0025, 0.0030, null],
+    'K46':   [0.0000, 0.0017, 0.0026, 0.0033, 0.0031, 0.0044, 0.0045, 0.0048, null],
+    'K47':   [0.0000, 0.0012, 0.0023, 0.0030, 0.0028, 0.0039, 0.0040, 0.0048, null],
+    'K48':   [0.0000, 0.0011, 0.0021, 0.0028, 0.0023, 0.0033, 0.0032, 0.0036, null],
+    'K56':   [0.0000, 0.0008, 0.0023, 0.0024, 0.0022, 0.0034, 0.0036, 0.0003, null],
+    'K57':   [0.0000, 0.0010, 0.0014, 0.0019, 0.0014, 0.0025, 0.0025, 0.0031, null],
+    'K58':   [0.0000, 0.0004, 0.0023, 0.0018, 0.0014, 0.0026, 0.0025, 0.0029, null],
+    'K10':   [0.0000, 0.0036, 0.0062, 0.0102, 0.0149, 0.0229, null,   null,   null],
+    'K40':   [0.0000, 0.0032, 0.0059, 0.0095, 0.0129, 0.0183, null,   null,   null],
+    'K50':   [0.0000, 0.0042, 0.0072, 0.0119, 0.0157, 0.0265, null,   null,   null]
+  };
+
+  const colorMap = {
+    'C1-1':'#7C1F1F','C1-2':'#A32D2D','C1-3':'#D04545',
+    'K16':'#7F77DD','K17':'#534AB7','K18':'#3C3489',
+    'K46':'#5DCAA5','K47':'#1D9E75','K48':'#0F6E56',
+    'K56':'#378ADD','K57':'#185FA5','K58':'#0C447C',
+    'K10':'#EF9F27','K40':'#BA7517','K50':'#854F0B'
+  };
+
+  const dashMap = {
+    'C1-1':[],'C1-2':[5,3],'C1-3':[2,2],
+    'K16':[],'K17':[5,3],'K18':[2,2],
+    'K46':[],'K47':[5,3],'K48':[2,2],
+    'K56':[],'K57':[5,3],'K58':[2,2],
+    'K10':[],'K40':[5,3],'K50':[2,2]
+  };
+
+  const baseOptions = (yMax) => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'nearest', intersect: false },
+    plugins: {
+      legend: { display: true, position: 'top',
+        labels: { font: { size: 11, family: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif' },
+                  boxWidth: 14, padding: 8, color: '#6b5440' } },
+      tooltip: {
+        backgroundColor: '#fffdf8',
+        titleColor: '#3d2a1a',
+        bodyColor: '#3d2a1a',
+        borderColor: 'rgba(61, 42, 26, 0.2)',
+        borderWidth: 1,
+        padding: 10,
+        callbacks: {
+          title: (items) => 'Day ' + items[0].label,
+          label: (ctx) => ctx.dataset.label + ': ' +
+            (ctx.parsed.y === null ? 'n/a' : (ctx.parsed.y * 100).toFixed(2) + '%')
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: { display: true, text: 'Days in sulfate solution',
+                 color: '#6b5440', font: { size: 11 } },
+        ticks: { color: '#9a8770', font: { size: 10 } },
+        grid: { color: 'rgba(61, 42, 26, 0.06)' }
+      },
+      y: {
+        title: { display: true, text: 'Mass change (%)',
+                 color: '#6b5440', font: { size: 11 } },
+        min: -0.005,
+        max: yMax,
+        ticks: {
+          color: '#9a8770',
+          font: { size: 10 },
+          callback: (v) => (v * 100).toFixed(1) + '%'
+        },
+        grid: { color: 'rgba(61, 42, 26, 0.06)' }
+      }
+    }
+  });
+
+  const seriesFor = (name) => ({
+    label: name,
+    data: data[name],
+    borderColor: colorMap[name],
+    backgroundColor: colorMap[name],
+    borderWidth: 2,
+    borderDash: dashMap[name] || [],
+    pointRadius: 3,
+    pointHoverRadius: 5,
+    tension: 0.15,
+    spanGaps: false
+  });
+
+  new Chart(document.getElementById('sa-all'), {
+    type: 'line',
+    data: { labels: days, datasets: Object.keys(data).map(seriesFor) },
+    options: (function(){
+      const o = baseOptions(undefined);
+      o.plugins.legend.position = 'right';
+      o.plugins.legend.labels.boxWidth = 12;
+      o.plugins.legend.labels.padding = 5;
+      return o;
+    })()
+  });
+
+  const groups = [
+    ['sa-c1',  ['C1-1','C1-2','C1-3'], 0.025],
+    ['sa-k1',  ['K16','K17','K18'],    0.025],
+    ['sa-k4',  ['K46','K47','K48'],    0.025],
+    ['sa-k5',  ['K56','K57','K58'],    0.025],
+    ['sa-raw', ['K10','K40','K50'],    0.030]
+  ];
+
+  groups.forEach(([canvasId, samples, yMax]) => {
+    new Chart(document.getElementById(canvasId), {
+      type: 'line',
+      data: { labels: days, datasets: samples.map(seriesFor) },
+      options: baseOptions(yMax)
+    });
+  });
+})();
+</script>
 </body>
 </html>
