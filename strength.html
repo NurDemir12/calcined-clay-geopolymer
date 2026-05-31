@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Strength & SAI — Calcined Clay Geopolymer Thesis</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Calcined clay geopolymer thesis</h1>
+  <p class="subtitle">MSc thesis · Şile clays K1, K4, K5 · Istanbul</p>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="strength.html" class="active">Strength &amp; SAI</a>
+    <a href="durability.html">Durability</a>
+    <a href="conferences.html">Conferences</a>
+  </nav>
+</header>
+
+<section id="compressive">
+  <h2>Compressive strength — SAI mortar samples</h2>
+  <div class="card">
+    <p class="card-intro">Compressive strength (MPa) of 20% clay + 80% OPC mortar prisms at 2, 7, 28 and 90 days, with water-to-cement ratio. C1 and C2 are plain OPC references.</p>
+    <div style="overflow-x:auto;">
+    <table class="tbl" style="font-size:12px;">
+      <thead>
+        <tr>
+          <th>ID</th><th>Prism</th>
+          <th style="text-align:right;">2 d</th><th style="text-align:right;">7 d</th>
+          <th style="text-align:right;">28 d</th><th style="text-align:right;">90 d</th>
+          <th style="text-align:right;">W/C</th>
+        </tr>
+      </thead>
+      <tbody id="fc-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="flexural">
+  <h2>Flexural strength — SAI mortar samples</h2>
+  <div class="card">
+    <p class="card-intro">Flexural (bending) strength (MPa) of the same prism set at 2, 7, 28 and 90 days.</p>
+    <div style="overflow-x:auto;">
+    <table class="tbl" style="font-size:12px;">
+      <thead>
+        <tr>
+          <th>ID</th><th>Prism</th>
+          <th style="text-align:right;">2 d</th><th style="text-align:right;">7 d</th>
+          <th style="text-align:right;">28 d</th><th style="text-align:right;">90 d</th>
+        </tr>
+      </thead>
+      <tbody id="fl-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</section>
+
+<section id="sai">
+  <h2>Strength activity index (SAI) — C1 as reference</h2>
+  <div class="card">
+    <p class="card-intro">SAI = (sample strength / C1 strength at the same age) × 100, computed separately for compressive and flexural strength. The dashed red line marks the 75% ASTM C618 threshold. C1 is the sole reference; C2 is excluded.</p>
+
+    <h3>Compressive SAI</h3>
+    <div class="sa-chart-wrap" style="height:340px;">
+      <canvas id="sai-fc" role="img" aria-label="Grouped bar chart of compressive SAI at 2, 7, 28 and 90 days for all samples with 75 percent threshold line">Compressive SAI for all samples across ages.</canvas>
+    </div>
+    <div class="sa-legend">
+      <span><span class="sa-sw" style="background:#A32D2D"></span>Raw clays (K10/K40/K50)</span>
+      <span><span class="sa-sw" style="background:#3B6D11"></span>K1 series (K16/K17/K18)</span>
+      <span><span class="sa-sw" style="background:#BA7517"></span>K4 series (K46/K47/K48)</span>
+      <span><span class="sa-sw" style="background:#185FA5"></span>K5 series (K56/K57/K58)</span>
+    </div>
+
+    <h3 style="margin-top:1.75rem;">Flexural SAI</h3>
+    <div class="sa-chart-wrap" style="height:340px;">
+      <canvas id="sai-fl" role="img" aria-label="Grouped bar chart of flexural SAI at 2, 7, 28 and 90 days for all samples with 75 percent threshold line">Flexural SAI for all samples across ages.</canvas>
+    </div>
+    <div class="sa-legend">
+      <span><span class="sa-sw" style="background:#A32D2D"></span>Raw clays (K10/K40/K50)</span>
+      <span><span class="sa-sw" style="background:#3B6D11"></span>K1 series (K16/K17/K18)</span>
+      <span><span class="sa-sw" style="background:#BA7517"></span>K4 series (K46/K47/K48)</span>
+      <span><span class="sa-sw" style="background:#185FA5"></span>K5 series (K56/K57/K58)</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>MSc thesis · Calcined clay geopolymers from Şile waste clays · Updated 31 May 2026</p>
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="charts.js"></script>
+</body>
+</html>
