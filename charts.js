@@ -478,8 +478,39 @@ function __initAllCharts(){
 
 /* ---- Collapsible sections: each <section> header toggles its body ---- */
 (function(){
+  function shortLabel(text){
+    // strip caret + trim, cut at em-dash / en-dash for a concise label
+    var t = text.replace('\u25B8','').trim();
+    var cut = t.split(/\s[\u2014\u2013]\s/)[0];
+    return cut.trim();
+  }
+
+  function buildSubnav(sections){
+    if(!sections.length) return;
+    var bar = document.createElement('div');
+    bar.className = 'subnav';
+    sections.forEach(function(sec){
+      var h2 = sec.querySelector('h2');
+      if(!h2) return;
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'subnav-btn';
+      btn.textContent = shortLabel(h2.textContent);
+      btn.addEventListener('click', function(){
+        sec.classList.add('open');
+        sec.scrollIntoView({behavior:'smooth', block:'start'});
+      });
+      bar.appendChild(btn);
+    });
+    var header = document.querySelector('header');
+    if(header && header.parentNode){
+      header.parentNode.insertBefore(bar, header.nextSibling);
+    }
+  }
+
   function setup(){
-    var sections = document.querySelectorAll('section[id]');
+    var sections = Array.prototype.slice.call(document.querySelectorAll('section[id]'));
+    buildSubnav(sections);
     sections.forEach(function(sec){
       var h2 = sec.querySelector('h2');
       if(!h2) return;
