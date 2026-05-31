@@ -1,16 +1,18 @@
-/* ---- multi-page guard: skip charts/tables whose elements aren't on this page ---- */
+/* Safe Chart wrapper: skip when canvas is absent on this page */
 (function(){
-  if (typeof window.__ChartGuarded) return;
-  window.__ChartGuarded = true;
-  const _Chart = window.Chart;
-  window.Chart = function(ctx, cfg){
-    if (!ctx) return { destroy(){}, update(){} };  // element not on this page
-    return new _Chart(ctx, cfg);
-  };
-  window.Chart.prototype = _Chart.prototype;
-  Object.keys(_Chart).forEach(k => { try { window.Chart[k] = _Chart[k]; } catch(e){} });
+  if (window.__chartWrapped) return;
+  window.__chartWrapped = true;
+  var Native = window.Chart;
+  function Wrapped(ctx, cfg){
+    if (!ctx) return { destroy:function(){}, update:function(){}, resize:function(){} };
+    return new Native(ctx, cfg);
+  }
+  Wrapped.prototype = Native.prototype;
+  for (var k in Native){ if (Object.prototype.hasOwnProperty.call(Native,k)){ try{ Wrapped[k]=Native[k]; }catch(e){} } }
+  window.Chart = Wrapped;
 })();
 
+function __initAllCharts(){
 (function(){
   /*
     COLOR SYSTEM
@@ -177,6 +179,7 @@
 
 
   /* ---- CAPILLARY SORPTIVITY DATA ---- */
+
   (function(){
     const capColorMap = {
       'C1':'#C9A800','C2':'#C9A800',
@@ -305,7 +308,7 @@
 
     /* Data table */
     const tbody = document.getElementById('cap-tbody');
-    if (tbody) {
+    if(tbody){
     const groupLabels = {OPC:'OPC reference',Raw:'Raw clay blends',K1:'K1 series',K4:'K4 series',K5:'K5 series'};
     const groupColors = {OPC:'#C9A800',Raw:'#A32D2D',K1:'#3B6D11',K4:'#BA7517',K5:'#185FA5'};
     let lastGroup='';
@@ -327,12 +330,14 @@
         <td style="padding:9px 12px;text-align:right;">${chgHtml}</td>`;
       tbody.appendChild(tr);
     });
-    }
+  }
   })();
 
   /* ================================================================
      COMPRESSIVE / FLEXURAL TABLES + COMPRESSIVE & FLEXURAL SAI BARS
   ================================================================ */
+
+
   (function(){
     const ages = [2, 7, 28, 90];
 
@@ -393,7 +398,7 @@
 
     function buildTable(tbodyId, dataObj, includeWC){
       const tb = document.getElementById(tbodyId);
-      if (!tb) return;
+      if(!tb) return;
       tableOrder.forEach(([gname, samples])=>{
         samples.forEach((s,idx)=>{
           const tr = document.createElement('tr');
@@ -468,3 +473,61 @@
     saiChart('sai-fc', saiFc);
     saiChart('sai-fl', saiFl);
   })();
+}
+
+
+/* ---- Collapsible sections: each <section> header toggles its body ---- */
+(function(){
+  function setup(){
+    var sections = document.querySelectorAll('section[id]');
+    sections.forEach(function(sec){
+      var h2 = sec.querySelector('h2');
+      if(!h2) return;
+      // wrap everything after the h2 into a .section-body container
+      var body = document.createElement('div');
+      body.className = 'section-body';
+      var node = h2.nextSibling;
+      while(node){
+        var next = node.nextSibling;
+        body.appendChild(node);
+        node = next;
+      }
+      sec.appendChild(body);
+
+      // make the h2 a button
+      h2.classList.add('section-toggle');
+      h2.setAttribute('role','button');
+      h2.setAttribute('tabindex','0');
+      var caret = document.createElement('span');
+      caret.className = 'caret';
+      caret.textContent = '▸';
+      h2.appendChild(caret);
+
+      // default: open
+      sec.classList.add('open');
+
+      function toggle(){
+        sec.classList.toggle('open');
+      }
+      h2.addEventListener('click', toggle);
+      h2.addEventListener('keydown', function(e){
+        if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); toggle(); }
+      });
+    });
+  }
+
+  function start(){
+    setup();
+    // build charts AFTER sections are open so canvases have dimensions
+    if (typeof __initAllCharts === 'function'){
+      try { __initAllCharts(); } catch(e){ console.error(e); }
+    }
+    // when a section is reopened, charts already exist & resize automatically
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();

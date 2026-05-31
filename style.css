@@ -121,3 +121,12 @@
 
 /* active nav item (multi-page) */
 nav a.active { border-color: var(--accent); color: var(--accent); background: rgba(184,105,58,0.08); font-weight: 500; }
+
+/* collapsible sections */
+.section-toggle { cursor: pointer; user-select: none; justify-content: flex-start; transition: color 0.15s; }
+.section-toggle:hover { color: var(--accent); }
+.section-toggle .caret { margin-left: auto; font-size: 14px; color: var(--text-tertiary); transition: transform 0.2s; }
+section.open .section-toggle .caret { transform: rotate(90deg); }
+.section-body { overflow: hidden; }
+section:not(.open) .section-body { display: none; }
+.section-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
