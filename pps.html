@@ -7,7 +7,7 @@
 <title>Performance index - Calcined Clay Geopolymer Thesis</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  /* page-scoped controls — built from the site's own variables */
+  /* page-scoped controls - built from the site's own variables */
   .pps-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem; margin-bottom: 1.5rem; }
   .pps-age-toggle { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 999px; overflow: hidden; }
   .pps-age-btn { font-family: inherit; padding: 7px 20px; font-size: 14px; cursor: pointer; background: rgba(184,105,58,0.05); border: none; color: var(--text-secondary); transition: all 0.15s; }
@@ -59,7 +59,7 @@
 <section id="pps">
   <h2>Pozzolanic Performance Score (PPS)</h2>
   <div class="card">
-    <p class="card-intro">ASTM C618 judges a pozzolan on a single number — the 28-day Strength Activity Index — as a pass/fail at 75%. That ignores durability entirely. The Pozzolanic Performance Score combines four normalized metrics (compressive SAI, total water absorption, capillary sorptivity, and sulfate mass change) into one 0–100 index. Each metric is scored relative to the best-performing calcined sample at the selected curing age, then weighted. Adjust the weights to explore how the ranking responds to different priorities.</p>
+    <p class="card-intro">ASTM C618 judges a pozzolan on a single number - the 28-day Strength Activity Index - as a pass/fail at 75%. That ignores durability entirely. The Pozzolanic Performance Score combines four normalized metrics (compressive SAI, total water absorption, capillary sorptivity, and sulfate mass change) into one 0–100 index. Each metric is scored relative to the best-performing calcined sample at the selected curing age, then weighted. Adjust the weights to explore how the ranking responds to different priorities.</p>
 
     <div class="wa-stat-grid">
       <div class="wa-stat"><div class="wa-stat-label">Metrics combined</div><div class="wa-stat-value">4</div><div class="wa-stat-sub">strength + 3 durability</div></div>
@@ -82,7 +82,7 @@
         <div class="pps-weight-row"><label>Water absorption</label><input type="range" id="w2" min="0" max="100" step="5" value="25"><span class="wval" id="w2v">25%</span></div>
         <div class="pps-weight-row"><label>Capillary sorptivity</label><input type="range" id="w3" min="0" max="100" step="5" value="25"><span class="wval" id="w3v">25%</span></div>
         <div class="pps-weight-row"><label>Sulfate (56-day)</label><input type="range" id="w4" min="0" max="100" step="5" value="15"><span class="wval" id="w4v">15%</span></div>
-        <p class="pps-total">Total: <span id="wtotal">100</span>% <span id="wwarn" style="color:#A32D2D; display:none;">— adjust to 100% to update</span></p>
+        <p class="pps-total">Total: <span id="wtotal">100</span>% <span id="wwarn" style="color:#A32D2D; display:none;">- adjust to 100% to update</span></p>
       </div>
     </div>
 
@@ -124,17 +124,17 @@
 <section id="method">
   <h2>How the score is calculated</h2>
   <div class="card">
-    <p class="card-intro">Each metric is measured in different units and points in a different direction — strength is "higher is better", while absorption, sorptivity, and sulfate mass change are "lower is better". To combine them, every metric is rescaled to a common 0–100 range using min–max normalization within the calcined samples at the chosen age, with the three durability metrics inverted so that 100 always means best.</p>
+    <p class="card-intro">Each metric is measured in different units and points in a different direction - strength is "higher is better", while absorption, sorptivity, and sulfate mass change are "lower is better". To combine them, every metric is rescaled to a common 0–100 range using min–max normalization within the calcined samples at the chosen age, with the three durability metrics inverted so that 100 always means best.</p>
 
     <div class="pps-formula">
       <b>PPS = w₁·S̃ + w₂·Ã + w₃·C̃ + w₄·Ū</b><br>
-      <b>S̃</b> — compressive SAI, scaled 0–100 (higher = better)<br>
-      <b>Ã</b> — total water absorption, inverted and scaled (lower = better)<br>
-      <b>C̃</b> — capillary sorptivity, inverted and scaled (lower = better)<br>
-      <b>Ū</b> — sulfate mass change (absolute, 56-day), inverted and scaled (less change = better)<br>
+      <b>S̃</b> - compressive SAI, scaled 0–100 (higher = better)<br>
+      <b>Ã</b> - total water absorption, inverted and scaled (lower = better)<br>
+      <b>C̃</b> - capillary sorptivity, inverted and scaled (lower = better)<br>
+      <b>Ū</b> - sulfate mass change (absolute, 56-day), inverted and scaled (less change = better)<br>
       <span style="font-size:13px; color:var(--text-tertiary);">Weights w₁–w₄ are set above and sum to 1. SAI is referenced to C1 (plain OPC) at the matching age: 47.7 MPa at 28 days, 52.9 MPa at 90 days. The 28- and 90-day scores are normalized separately so each reflects performance at that age.</span>
     </div>
-    <p style="font-size:14px; color:var(--text-secondary); margin-top:1rem;">Because the two ages are scored independently, the ranking shifts with curing time: the K5 series leads early through low absorption and sorptivity, while the slower-reacting K1 series overtakes it by 90 days as continued pozzolanic reaction refines the pore structure — a crossover a single 28-day index cannot capture.</p>
+    <p style="font-size:14px; color:var(--text-secondary); margin-top:1rem;">Because the two ages are scored independently, the ranking shifts with curing time: the K5 series leads early through low absorption and sorptivity, while the slower-reacting K1 series overtakes it by 90 days as continued pozzolanic reaction refines the pore structure - a crossover a single 28-day index cannot capture.</p>
   </div>
 </section>
 
