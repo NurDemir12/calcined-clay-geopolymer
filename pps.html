@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light only">
-<title>Performance index — Calcined Clay Geopolymer Thesis</title>
+<title>Performance index - Calcined Clay Geopolymer Thesis</title>
 <link rel="stylesheet" href="style.css">
 <style>
   /* page-scoped controls — built from the site's own variables */
@@ -145,160 +145,170 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="charts.js"></script>
 <script>
-const C1 = { c28: 47.7, c90: 52.9 };
-const RAW = {
-  K16: { c28:44.8, c90:49.0, wa28:5.83, wa90:4.34, sp28:0.00186, sp90:0.00071, sulf:0.44 },
-  K17: { c28:44.0, c90:48.8, wa28:5.87, wa90:4.34, sp28:0.00145, sp90:0.00073, sulf:0.40 },
-  K18: { c28:37.7, c90:55.6, wa28:6.64, wa90:4.42, sp28:0.00154, sp90:0.00076, sulf:0.38 },
-  K46: { c28:37.9, c90:42.0, wa28:7.10, wa90:5.24, sp28:0.00172, sp90:0.00092, sulf:-0.61 },
-  K47: { c28:38.3, c90:46.9, wa28:6.72, wa90:4.83, sp28:0.00150, sp90:0.00078, sulf:0.60 },
-  K48: { c28:36.9, c90:48.1, wa28:7.30, wa90:4.75, sp28:0.00172, sp90:0.00097, sulf:0.46 },
-  K56: { c28:40.7, c90:47.8, wa28:5.17, wa90:5.04, sp28:0.00138, sp90:0.00075, sulf:-0.43 },
-  K57: { c28:42.0, c90:47.6, wa28:4.87, wa90:4.84, sp28:0.00114, sp90:0.00080, sulf:0.35 },
-  K58: { c28:40.3, c90:49.9, wa28:5.12, wa90:4.81, sp28:0.00133, sp90:0.00081, sulf:0.38 },
-};
-const COLORS = { K16:'#3B6D11',K17:'#3B6D11',K18:'#3B6D11',K46:'#BA7517',K47:'#BA7517',K48:'#BA7517',K56:'#185FA5',K57:'#185FA5',K58:'#185FA5' };
-const SERIES = { K16:'K1 series',K17:'K1 series',K18:'K1 series',K46:'K4 series',K47:'K4 series',K48:'K4 series',K56:'K5 series',K57:'K5 series',K58:'K5 series' };
-const BADGE = { K16:'pps-b-k1',K17:'pps-b-k1',K18:'pps-b-k1',K46:'pps-b-k4',K47:'pps-b-k4',K48:'pps-b-k4',K56:'pps-b-k5',K57:'pps-b-k5',K58:'pps-b-k5' };
+(function(){
+  const C1 = { c28: 47.7, c90: 52.9 };
+  const RAW = {
+    K16: { c28:44.8, c90:49.0, wa28:5.83, wa90:4.34, sp28:0.00186, sp90:0.00071, sulf:0.44 },
+    K17: { c28:44.0, c90:48.8, wa28:5.87, wa90:4.34, sp28:0.00145, sp90:0.00073, sulf:0.40 },
+    K18: { c28:37.7, c90:55.6, wa28:6.64, wa90:4.42, sp28:0.00154, sp90:0.00076, sulf:0.38 },
+    K46: { c28:37.9, c90:42.0, wa28:7.10, wa90:5.24, sp28:0.00172, sp90:0.00092, sulf:-0.61 },
+    K47: { c28:38.3, c90:46.9, wa28:6.72, wa90:4.83, sp28:0.00150, sp90:0.00078, sulf:0.60 },
+    K48: { c28:36.9, c90:48.1, wa28:7.30, wa90:4.75, sp28:0.00172, sp90:0.00097, sulf:0.46 },
+    K56: { c28:40.7, c90:47.8, wa28:5.17, wa90:5.04, sp28:0.00138, sp90:0.00075, sulf:-0.43 },
+    K57: { c28:42.0, c90:47.6, wa28:4.87, wa90:4.84, sp28:0.00114, sp90:0.00080, sulf:0.35 },
+    K58: { c28:40.3, c90:49.9, wa28:5.12, wa90:4.81, sp28:0.00133, sp90:0.00081, sulf:0.38 },
+  };
+  const COLORS = { K16:'#3B6D11',K17:'#3B6D11',K18:'#3B6D11',K46:'#BA7517',K47:'#BA7517',K48:'#BA7517',K56:'#185FA5',K57:'#185FA5',K58:'#185FA5' };
+  const SERIES = { K16:'K1 series',K17:'K1 series',K18:'K1 series',K46:'K4 series',K47:'K4 series',K48:'K4 series',K56:'K5 series',K57:'K5 series',K58:'K5 series' };
+  const BADGE = { K16:'pps-b-k1',K17:'pps-b-k1',K18:'pps-b-k1',K46:'pps-b-k4',K47:'pps-b-k4',K48:'pps-b-k4',K56:'pps-b-k5',K57:'pps-b-k5',K58:'pps-b-k5' };
+  const RADAR_COLORS = ['#b8693a', '#0F6E56', '#534AB7'];
 
-let currentAge = 28;
-let barInst = null, radarInst = null;
+  let currentAge = 28;
+  let barInst = null, radarInst = null;
 
-function getWeights() {
-  return ['w1','w2','w3','w4'].map(id => parseInt(document.getElementById(id).value, 10));
-}
-function buildAgeData(age) {
-  const out = {};
-  for (const [id, d] of Object.entries(RAW)) {
-    out[id] = {
-      sai: (age===28 ? d.c28/C1.c28 : d.c90/C1.c90) * 100,
-      wa: age===28 ? d.wa28 : d.wa90,
-      sp: age===28 ? d.sp28 : d.sp90,
-      sulf: Math.abs(d.sulf)
-    };
+  function getWeights() {
+    return ['w1','w2','w3','w4'].map(id => parseInt(document.getElementById(id).value, 10));
   }
-  return out;
-}
-function normField(data, key, invert) {
-  const vals = Object.values(data).map(d => d[key]);
-  const mx = Math.max(...vals), mn = Math.min(...vals);
-  const r = {};
-  for (const [id, d] of Object.entries(data)) {
-    let n = mx===mn ? 0 : (d[key]-mn)/(mx-mn);
-    r[id] = (invert ? 1-n : n) * 100;
+  function buildAgeData(age) {
+    const out = {};
+    for (const [id, d] of Object.entries(RAW)) {
+      out[id] = {
+        sai: (age===28 ? d.c28/C1.c28 : d.c90/C1.c90) * 100,
+        wa: age===28 ? d.wa28 : d.wa90,
+        sp: age===28 ? d.sp28 : d.sp90,
+        sulf: Math.abs(d.sulf)
+      };
+    }
+    return out;
   }
-  return r;
-}
-function computeScores(age, w) {
-  const data = buildAgeData(age);
-  const [w1,w2,w3,w4] = w.map(x => x/100);
-  const nSAI = normField(data,'sai',false);
-  const nWA  = normField(data,'wa',true);
-  const nSP  = normField(data,'sp',true);
-  const nSU  = normField(data,'sulf',true);
-  const s = {};
-  for (const id of Object.keys(data)) {
-    s[id] = { pps: w1*nSAI[id]+w2*nWA[id]+w3*nSP[id]+w4*nSU[id], sai:nSAI[id], wa:nWA[id], sp:nSP[id], su:nSU[id] };
+  function normField(data, key, invert) {
+    const vals = Object.values(data).map(d => d[key]);
+    const mx = Math.max(...vals), mn = Math.min(...vals);
+    const r = {};
+    for (const [id, d] of Object.entries(data)) {
+      let n = mx===mn ? 0 : (d[key]-mn)/(mx-mn);
+      r[id] = (invert ? 1-n : n) * 100;
+    }
+    return r;
   }
-  return s;
-}
-function renderRank(s) {
-  const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
-  const body = document.getElementById('rankBody');
-  body.innerHTML = '';
-  sorted.forEach(([id,v],i)=>{
-    const pct = v.pps.toFixed(1);
-    const tr = document.createElement('tr');
-    tr.innerHTML =
-      '<td style="color:var(--text-tertiary); font-weight:500;">'+(i+1)+'</td>'+
-      '<td style="font-weight:600;">'+id+'</td>'+
-      '<td><span class="pps-badge '+BADGE[id]+'">'+SERIES[id]+'</span></td>'+
-      '<td style="text-align:right; font-weight:600;">'+pct+'</td>'+
-      '<td class="bar-cell"><div class="pps-bar-track"><div class="pps-bar-fill" style="width:'+pct+'%; background:'+COLORS[id]+';"></div></div></td>'+
-      '<td style="text-align:right; color:var(--text-secondary);">'+v.sai.toFixed(0)+'</td>'+
-      '<td style="text-align:right; color:var(--text-secondary);">'+v.wa.toFixed(0)+'</td>'+
-      '<td style="text-align:right; color:var(--text-secondary);">'+v.sp.toFixed(0)+'</td>'+
-      '<td style="text-align:right; color:var(--text-secondary);">'+v.su.toFixed(0)+'</td>';
-    body.appendChild(tr);
-  });
-}
-function renderBar(s) {
-  const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
-  if (barInst) { barInst.destroy(); barInst = null; }
-  barInst = new Chart(document.getElementById('barChart'), {
-    type: 'bar',
-    data: { labels: sorted.map(d=>d[0]), datasets: [{ label: 'PPS', data: sorted.map(d=>parseFloat(d[1].pps.toFixed(1))), backgroundColor: sorted.map(d=>COLORS[d[0]]), borderRadius: 4 }] },
-    options: {
-      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { min: 0, max: 100, grid: { color: 'rgba(61,42,26,0.08)' }, ticks: { font: { size: 12 }, color: '#6b5440' } },
-        y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#3d2a1a' } }
+  function computeScores(age, w) {
+    const data = buildAgeData(age);
+    const [w1,w2,w3,w4] = w.map(x => x/100);
+    const nSAI = normField(data,'sai',false);
+    const nWA  = normField(data,'wa',true);
+    const nSP  = normField(data,'sp',true);
+    const nSU  = normField(data,'sulf',true);
+    const s = {};
+    for (const id of Object.keys(data)) {
+      s[id] = { pps: w1*nSAI[id]+w2*nWA[id]+w3*nSP[id]+w4*nSU[id], sai:nSAI[id], wa:nWA[id], sp:nSP[id], su:nSU[id] };
+    }
+    return s;
+  }
+  function renderRank(s) {
+    const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
+    const body = document.getElementById('rankBody');
+    body.innerHTML = '';
+    sorted.forEach(([id,v],i)=>{
+      const pct = v.pps.toFixed(1);
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td style="color:var(--text-tertiary); font-weight:500;">'+(i+1)+'</td>'+
+        '<td style="font-weight:600;">'+id+'</td>'+
+        '<td><span class="pps-badge '+BADGE[id]+'">'+SERIES[id]+'</span></td>'+
+        '<td style="text-align:right; font-weight:600;">'+pct+'</td>'+
+        '<td class="bar-cell"><div class="pps-bar-track"><div class="pps-bar-fill" style="width:'+pct+'%; background:'+COLORS[id]+';"></div></div></td>'+
+        '<td style="text-align:right; color:var(--text-secondary);">'+v.sai.toFixed(0)+'</td>'+
+        '<td style="text-align:right; color:var(--text-secondary);">'+v.wa.toFixed(0)+'</td>'+
+        '<td style="text-align:right; color:var(--text-secondary);">'+v.sp.toFixed(0)+'</td>'+
+        '<td style="text-align:right; color:var(--text-secondary);">'+v.su.toFixed(0)+'</td>';
+      body.appendChild(tr);
+    });
+  }
+  function renderBar(s) {
+    const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
+    if (barInst) { barInst.destroy(); barInst = null; }
+    barInst = new Chart(document.getElementById('barChart'), {
+      type: 'bar',
+      data: { labels: sorted.map(d=>d[0]), datasets: [{ label: 'PPS', data: sorted.map(d=>parseFloat(d[1].pps.toFixed(1))), backgroundColor: sorted.map(d=>COLORS[d[0]]), borderColor: sorted.map(d=>COLORS[d[0]]), borderWidth: 1, borderRadius: 4 }] },
+      options: {
+        responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+        plugins: {
+          legend: { display: false },
+          tooltip: { backgroundColor:'#fffdf8', titleColor:'#3d2a1a', bodyColor:'#3d2a1a', borderColor:'rgba(61,42,26,0.2)', borderWidth:1, padding:10, callbacks: { label:(c)=>'PPS: '+c.parsed.x.toFixed(1) } }
+        },
+        scales: {
+          x: { min: 0, max: 100, title:{display:true,text:'Pozzolanic Performance Score',color:'#6b5440',font:{size:11}}, grid: { color: 'rgba(61,42,26,0.06)' }, ticks: { font: { size: 11 }, color: '#9a8770' } },
+          y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#3d2a1a' } }
+        }
       }
-    }
+    });
+    requestAnimationFrame(()=>{ if (barInst) barInst.resize(); });
+  }
+  function renderRadar(s) {
+    const top3 = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps).slice(0,3);
+    if (radarInst) { radarInst.destroy(); radarInst = null; }
+    radarInst = new Chart(document.getElementById('radarChart'), {
+      type: 'radar',
+      data: {
+        labels: ['Compressive SAI','Water absorption','Sorptivity','Sulfate resist.'],
+        datasets: top3.map(([id,v],i)=>({
+          label: id + ' (' + SERIES[id].replace(' series','') + ')',
+          data: [v.sai, v.wa, v.sp, v.su].map(x=>parseFloat(x.toFixed(1))),
+          borderColor: RADAR_COLORS[i], backgroundColor: RADAR_COLORS[i]+'22',
+          pointBackgroundColor: RADAR_COLORS[i], borderWidth: 2, pointRadius: 4
+        }))
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: 'rgba(61,42,26,0.12)' }, angleLines: { color: 'rgba(61,42,26,0.12)' }, pointLabels: { font: { size: 12 }, color: '#6b5440' } } },
+        plugins: { legend: { position: 'bottom', labels: { font: { size: 13 }, color: '#3d2a1a', boxWidth: 12, padding: 16 } } }
+      }
+    });
+    requestAnimationFrame(()=>{ if (radarInst) radarInst.resize(); });
+  }
+  function activePanel() {
+    const t = document.querySelector('.pps-tab.active');
+    return t ? t.dataset.panel : 'rank';
+  }
+  function update() {
+    const w = getWeights();
+    const total = w.reduce((a,b)=>a+b,0);
+    document.getElementById('wtotal').textContent = total;
+    document.getElementById('wwarn').style.display = total!==100 ? 'inline' : 'none';
+    ['w1','w2','w3','w4'].forEach((id,i)=>{ document.getElementById(id+'v').textContent = w[i]+'%'; });
+    if (total!==100) return;
+    const s = computeScores(currentAge, w);
+    renderRank(s);
+    const p = activePanel();
+    if (p==='bar') renderBar(s);
+    if (p==='radar') renderRadar(s);
+  }
+  function setAge(age) {
+    currentAge = age;
+    document.getElementById('age28').classList.toggle('active', age===28);
+    document.getElementById('age90').classList.toggle('active', age===90);
+    update();
+  }
+  document.getElementById('age28').addEventListener('click', ()=>setAge(28));
+  document.getElementById('age90').addEventListener('click', ()=>setAge(90));
+  ['w1','w2','w3','w4'].forEach(id => document.getElementById(id).addEventListener('input', update));
+  document.querySelectorAll('.pps-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.pps-tab').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.pps-panel').forEach(p=>p.classList.remove('visible'));
+      tab.classList.add('active');
+      const name = tab.dataset.panel;
+      document.getElementById('panel-'+name).classList.add('visible');
+      if (getWeights().reduce((a,b)=>a+b,0) !== 100) return;
+      const s = computeScores(currentAge, getWeights());
+      if (name==='bar') requestAnimationFrame(()=>renderBar(s));
+      else if (name==='radar') requestAnimationFrame(()=>renderRadar(s));
+    });
   });
-}
-function renderRadar(s) {
-  const top3 = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps).slice(0,3);
-  if (radarInst) { radarInst.destroy(); radarInst = null; }
-  radarInst = new Chart(document.getElementById('radarChart'), {
-    type: 'radar',
-    data: {
-      labels: ['Compressive SAI','Water absorption','Sorptivity','Sulfate resist.'],
-      datasets: top3.map(([id,v])=>({
-        label: id,
-        data: [v.sai, v.wa, v.sp, v.su].map(x=>parseFloat(x.toFixed(1))),
-        borderColor: COLORS[id], backgroundColor: COLORS[id]+'22',
-        pointBackgroundColor: COLORS[id], borderWidth: 2, pointRadius: 4
-      }))
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: 'rgba(61,42,26,0.12)' }, angleLines: { color: 'rgba(61,42,26,0.12)' }, pointLabels: { font: { size: 12 }, color: '#6b5440' } } },
-      plugins: { legend: { position: 'bottom', labels: { font: { size: 13 }, color: '#3d2a1a', boxWidth: 12, padding: 16 } } }
-    }
-  });
-}
-function activePanel() {
-  const el = document.querySelector('.pps-panel.visible');
-  return el ? el.id.replace('panel-','') : 'rank';
-}
-function update() {
-  const w = getWeights();
-  const total = w.reduce((a,b)=>a+b,0);
-  document.getElementById('wtotal').textContent = total;
-  document.getElementById('wwarn').style.display = total!==100 ? 'inline' : 'none';
-  ['w1','w2','w3','w4'].forEach((id,i)=>{ document.getElementById(id+'v').textContent = w[i]+'%'; });
-  if (total!==100) return;
-  const s = computeScores(currentAge, w);
-  renderRank(s);
-  const p = activePanel();
-  if (p==='bar') renderBar(s);
-  if (p==='radar') renderRadar(s);
-}
-function setAge(age) {
-  currentAge = age;
-  document.getElementById('age28').classList.toggle('active', age===28);
-  document.getElementById('age90').classList.toggle('active', age===90);
   update();
-}
-document.getElementById('age28').addEventListener('click', ()=>setAge(28));
-document.getElementById('age90').addEventListener('click', ()=>setAge(90));
-['w1','w2','w3','w4'].forEach(id => document.getElementById(id).addEventListener('input', update));
-document.querySelectorAll('.pps-tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelectorAll('.pps-tab').forEach(t=>t.classList.remove('active'));
-    document.querySelectorAll('.pps-panel').forEach(p=>p.classList.remove('visible'));
-    tab.classList.add('active');
-    const name = tab.dataset.panel;
-    document.getElementById('panel-'+name).classList.add('visible');
-    const s = computeScores(currentAge, getWeights());
-    if (name==='bar') renderBar(s);
-    if (name==='radar') renderRadar(s);
-  });
-});
-update();
+})();
 </script>
 </body>
 </html>

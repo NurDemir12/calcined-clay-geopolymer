@@ -562,3 +562,28 @@ function __initAllCharts(){
     start();
   }
 })();
+
+/* ---- Ensure "Performance index" nav link exists on every page ---- */
+(function(){
+  function injectNav(){
+    var nav = document.querySelector('header nav');
+    if(!nav) return;
+    if(!nav.querySelector('a[href="pps.html"]')){
+      var link = document.createElement('a');
+      link.href = 'pps.html';
+      link.textContent = 'Performance index';
+      var conf = nav.querySelector('a[href="conferences.html"]');
+      if(conf){ nav.insertBefore(link, conf); } else { nav.appendChild(link); }
+    }
+    if(location.pathname.split('/').pop() === 'pps.html'){
+      nav.querySelectorAll('a').forEach(function(a){ a.classList.remove('active'); });
+      var ppsLink = nav.querySelector('a[href="pps.html"]');
+      if(ppsLink){ ppsLink.classList.add('active'); }
+    }
+  }
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', injectNav);
+  } else {
+    injectNav();
+  }
+})();
