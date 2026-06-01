@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<title>Performance index — Calcined Clay Geopolymer Thesis</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  /* page-scoped controls — built from the site's own variables */
+  .pps-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem 2.5rem; margin-bottom: 1.5rem; }
+  .pps-age-toggle { display: inline-flex; border: 1px solid var(--border-strong); border-radius: 999px; overflow: hidden; }
+  .pps-age-btn { font-family: inherit; padding: 7px 20px; font-size: 14px; cursor: pointer; background: rgba(184,105,58,0.05); border: none; color: var(--text-secondary); transition: all 0.15s; }
+  .pps-age-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+  .pps-weight-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .pps-weight-row label { width: 175px; font-size: 14px; color: var(--text-secondary); }
+  .pps-weight-row input[type=range] { flex: 1; accent-color: var(--accent); }
+  .pps-weight-row .wval { font-size: 14px; font-weight: 500; min-width: 38px; text-align: right; color: var(--text); }
+  .pps-total { font-size: 13px; color: var(--text-tertiary); margin: 6px 0 0; }
+  .pps-total span { font-weight: 600; color: var(--text); }
+  .pps-tabs { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 0.5rem 0 1.25rem; }
+  .pps-tab { font-family: inherit; font-size: 13px; color: var(--text-secondary); background: rgba(184,105,58,0.05); border: 1px solid var(--border); border-radius: 999px; padding: 7px 16px; cursor: pointer; transition: all 0.15s; }
+  .pps-tab:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
+  .pps-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+  .pps-panel { display: none; }
+  .pps-panel.visible { display: block; }
+  .pps-rank td.bar-cell { width: 140px; }
+  .pps-bar-track { background: rgba(184,105,58,0.10); border-radius: 3px; height: 9px; width: 100%; }
+  .pps-bar-fill { height: 9px; border-radius: 3px; }
+  .pps-badge { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 11px; font-weight: 500; }
+  .pps-b-k1 { background: rgba(59,109,17,0.13); color: #173404; }
+  .pps-b-k4 { background: rgba(186,117,23,0.16); color: #633806; }
+  .pps-b-k5 { background: rgba(24,95,165,0.13); color: #042C53; }
+  .pps-formula { background: rgba(184,105,58,0.05); border: 1px solid var(--border); border-left: 3px solid var(--accent-soft); border-radius: 8px; padding: 1rem 1.25rem; font-size: 14px; line-height: 1.9; color: var(--text-secondary); }
+  .pps-formula b { color: var(--text); }
+  @media (max-width: 600px) {
+    .pps-controls { grid-template-columns: 1fr; }
+    .pps-weight-row label { width: 140px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="header-text">
+  <h1>Calcined clay geopolymer thesis</h1>
+  <p class="subtitle">MSc thesis · Şile clays K1, K4, K5 · Istanbul</p>
+  </div>
+  <nav>
+    <a href="index.html">Overview</a>
+    <a href="strength.html">Strength &amp; SAI</a>
+    <a href="durability.html">Durability</a>
+    <a href="pps.html" class="active">Performance index</a>
+    <a href="conferences.html">Conferences</a>
+  </nav>
+</header>
+
+<section id="pps">
+  <h2>Pozzolanic Performance Score (PPS)</h2>
+  <div class="card">
+    <p class="card-intro">ASTM C618 judges a pozzolan on a single number — the 28-day Strength Activity Index — as a pass/fail at 75%. That ignores durability entirely. The Pozzolanic Performance Score combines four normalized metrics (compressive SAI, total water absorption, capillary sorptivity, and sulfate mass change) into one 0–100 index. Each metric is scored relative to the best-performing calcined sample at the selected curing age, then weighted. Adjust the weights to explore how the ranking responds to different priorities.</p>
+
+    <div class="wa-stat-grid">
+      <div class="wa-stat"><div class="wa-stat-label">Metrics combined</div><div class="wa-stat-value">4</div><div class="wa-stat-sub">strength + 3 durability</div></div>
+      <div class="wa-stat"><div class="wa-stat-label">Samples ranked</div><div class="wa-stat-value">9</div><div class="wa-stat-sub">3 clays × 3 temperatures</div></div>
+      <div class="wa-stat"><div class="wa-stat-label">Curing ages</div><div class="wa-stat-value">28 &amp; 90 d</div><div class="wa-stat-sub">computed independently</div></div>
+      <div class="wa-stat"><div class="wa-stat-label">Scale</div><div class="wa-stat-value">0–100</div><div class="wa-stat-sub">vs best calcined sample</div></div>
+    </div>
+
+    <div class="pps-controls">
+      <div>
+        <div class="sa-panel-title">Curing age</div>
+        <div class="pps-age-toggle">
+          <button class="pps-age-btn active" id="age28" type="button">28-day cured</button>
+          <button class="pps-age-btn" id="age90" type="button">90-day cured</button>
+        </div>
+      </div>
+      <div>
+        <div class="sa-panel-title">Metric weights (must total 100%)</div>
+        <div class="pps-weight-row"><label>Compressive SAI</label><input type="range" id="w1" min="0" max="100" step="5" value="35"><span class="wval" id="w1v">35%</span></div>
+        <div class="pps-weight-row"><label>Water absorption</label><input type="range" id="w2" min="0" max="100" step="5" value="25"><span class="wval" id="w2v">25%</span></div>
+        <div class="pps-weight-row"><label>Capillary sorptivity</label><input type="range" id="w3" min="0" max="100" step="5" value="25"><span class="wval" id="w3v">25%</span></div>
+        <div class="pps-weight-row"><label>Sulfate (56-day)</label><input type="range" id="w4" min="0" max="100" step="5" value="15"><span class="wval" id="w4v">15%</span></div>
+        <p class="pps-total">Total: <span id="wtotal">100</span>% <span id="wwarn" style="color:#A32D2D; display:none;">— adjust to 100% to update</span></p>
+      </div>
+    </div>
+
+    <div class="pps-tabs">
+      <button class="pps-tab active" type="button" data-panel="rank">Ranked scores</button>
+      <button class="pps-tab" type="button" data-panel="bar">Bar chart</button>
+      <button class="pps-tab" type="button" data-panel="radar">Radar (top 3)</button>
+    </div>
+
+    <div id="panel-rank" class="pps-panel visible">
+      <div style="overflow-x:auto;">
+      <table class="tbl pps-rank" style="font-size:13px;">
+        <thead>
+          <tr>
+            <th>#</th><th>Sample</th><th>Series</th><th style="text-align:right;">PPS</th><th></th>
+            <th style="text-align:right;">SAI</th><th style="text-align:right;">Absorp.</th>
+            <th style="text-align:right;">Sorpt.</th><th style="text-align:right;">Sulfate</th>
+          </tr>
+        </thead>
+        <tbody id="rankBody"></tbody>
+      </table>
+      </div>
+    </div>
+
+    <div id="panel-bar" class="pps-panel">
+      <div class="sa-chart-wrap" style="height:380px;">
+        <canvas id="barChart" role="img" aria-label="Bar chart of Pozzolanic Performance Scores for all calcined samples at the selected curing age">PPS bar chart by sample.</canvas>
+      </div>
+    </div>
+
+    <div id="panel-radar" class="pps-panel">
+      <div class="sa-chart-wrap" style="height:360px;">
+        <canvas id="radarChart" role="img" aria-label="Radar chart comparing the top three samples across the four metrics">Top three samples across four metrics.</canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="method">
+  <h2>How the score is calculated</h2>
+  <div class="card">
+    <p class="card-intro">Each metric is measured in different units and points in a different direction — strength is "higher is better", while absorption, sorptivity, and sulfate mass change are "lower is better". To combine them, every metric is rescaled to a common 0–100 range using min–max normalization within the calcined samples at the chosen age, with the three durability metrics inverted so that 100 always means best.</p>
+
+    <div class="pps-formula">
+      <b>PPS = w₁·S̃ + w₂·Ã + w₃·C̃ + w₄·Ū</b><br>
+      <b>S̃</b> — compressive SAI, scaled 0–100 (higher = better)<br>
+      <b>Ã</b> — total water absorption, inverted and scaled (lower = better)<br>
+      <b>C̃</b> — capillary sorptivity, inverted and scaled (lower = better)<br>
+      <b>Ū</b> — sulfate mass change (absolute, 56-day), inverted and scaled (less change = better)<br>
+      <span style="font-size:13px; color:var(--text-tertiary);">Weights w₁–w₄ are set above and sum to 1. SAI is referenced to C1 (plain OPC) at the matching age: 47.7 MPa at 28 days, 52.9 MPa at 90 days. The 28- and 90-day scores are normalized separately so each reflects performance at that age.</span>
+    </div>
+    <p style="font-size:14px; color:var(--text-secondary); margin-top:1rem;">Because the two ages are scored independently, the ranking shifts with curing time: the K5 series leads early through low absorption and sorptivity, while the slower-reacting K1 series overtakes it by 90 days as continued pozzolanic reaction refines the pore structure — a crossover a single 28-day index cannot capture.</p>
+  </div>
+</section>
+
+<footer>
+  <p>MSc thesis · Calcined clay geopolymers from Şile waste clays · Updated 02 June 2026</p>
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const C1 = { c28: 47.7, c90: 52.9 };
+const RAW = {
+  K16: { c28:44.8, c90:49.0, wa28:5.83, wa90:4.34, sp28:0.00186, sp90:0.00071, sulf:0.44 },
+  K17: { c28:44.0, c90:48.8, wa28:5.87, wa90:4.34, sp28:0.00145, sp90:0.00073, sulf:0.40 },
+  K18: { c28:37.7, c90:55.6, wa28:6.64, wa90:4.42, sp28:0.00154, sp90:0.00076, sulf:0.38 },
+  K46: { c28:37.9, c90:42.0, wa28:7.10, wa90:5.24, sp28:0.00172, sp90:0.00092, sulf:-0.61 },
+  K47: { c28:38.3, c90:46.9, wa28:6.72, wa90:4.83, sp28:0.00150, sp90:0.00078, sulf:0.60 },
+  K48: { c28:36.9, c90:48.1, wa28:7.30, wa90:4.75, sp28:0.00172, sp90:0.00097, sulf:0.46 },
+  K56: { c28:40.7, c90:47.8, wa28:5.17, wa90:5.04, sp28:0.00138, sp90:0.00075, sulf:-0.43 },
+  K57: { c28:42.0, c90:47.6, wa28:4.87, wa90:4.84, sp28:0.00114, sp90:0.00080, sulf:0.35 },
+  K58: { c28:40.3, c90:49.9, wa28:5.12, wa90:4.81, sp28:0.00133, sp90:0.00081, sulf:0.38 },
+};
+const COLORS = { K16:'#3B6D11',K17:'#3B6D11',K18:'#3B6D11',K46:'#BA7517',K47:'#BA7517',K48:'#BA7517',K56:'#185FA5',K57:'#185FA5',K58:'#185FA5' };
+const SERIES = { K16:'K1 series',K17:'K1 series',K18:'K1 series',K46:'K4 series',K47:'K4 series',K48:'K4 series',K56:'K5 series',K57:'K5 series',K58:'K5 series' };
+const BADGE = { K16:'pps-b-k1',K17:'pps-b-k1',K18:'pps-b-k1',K46:'pps-b-k4',K47:'pps-b-k4',K48:'pps-b-k4',K56:'pps-b-k5',K57:'pps-b-k5',K58:'pps-b-k5' };
+
+let currentAge = 28;
+let barInst = null, radarInst = null;
+
+function getWeights() {
+  return ['w1','w2','w3','w4'].map(id => parseInt(document.getElementById(id).value, 10));
+}
+function buildAgeData(age) {
+  const out = {};
+  for (const [id, d] of Object.entries(RAW)) {
+    out[id] = {
+      sai: (age===28 ? d.c28/C1.c28 : d.c90/C1.c90) * 100,
+      wa: age===28 ? d.wa28 : d.wa90,
+      sp: age===28 ? d.sp28 : d.sp90,
+      sulf: Math.abs(d.sulf)
+    };
+  }
+  return out;
+}
+function normField(data, key, invert) {
+  const vals = Object.values(data).map(d => d[key]);
+  const mx = Math.max(...vals), mn = Math.min(...vals);
+  const r = {};
+  for (const [id, d] of Object.entries(data)) {
+    let n = mx===mn ? 0 : (d[key]-mn)/(mx-mn);
+    r[id] = (invert ? 1-n : n) * 100;
+  }
+  return r;
+}
+function computeScores(age, w) {
+  const data = buildAgeData(age);
+  const [w1,w2,w3,w4] = w.map(x => x/100);
+  const nSAI = normField(data,'sai',false);
+  const nWA  = normField(data,'wa',true);
+  const nSP  = normField(data,'sp',true);
+  const nSU  = normField(data,'sulf',true);
+  const s = {};
+  for (const id of Object.keys(data)) {
+    s[id] = { pps: w1*nSAI[id]+w2*nWA[id]+w3*nSP[id]+w4*nSU[id], sai:nSAI[id], wa:nWA[id], sp:nSP[id], su:nSU[id] };
+  }
+  return s;
+}
+function renderRank(s) {
+  const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
+  const body = document.getElementById('rankBody');
+  body.innerHTML = '';
+  sorted.forEach(([id,v],i)=>{
+    const pct = v.pps.toFixed(1);
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td style="color:var(--text-tertiary); font-weight:500;">'+(i+1)+'</td>'+
+      '<td style="font-weight:600;">'+id+'</td>'+
+      '<td><span class="pps-badge '+BADGE[id]+'">'+SERIES[id]+'</span></td>'+
+      '<td style="text-align:right; font-weight:600;">'+pct+'</td>'+
+      '<td class="bar-cell"><div class="pps-bar-track"><div class="pps-bar-fill" style="width:'+pct+'%; background:'+COLORS[id]+';"></div></div></td>'+
+      '<td style="text-align:right; color:var(--text-secondary);">'+v.sai.toFixed(0)+'</td>'+
+      '<td style="text-align:right; color:var(--text-secondary);">'+v.wa.toFixed(0)+'</td>'+
+      '<td style="text-align:right; color:var(--text-secondary);">'+v.sp.toFixed(0)+'</td>'+
+      '<td style="text-align:right; color:var(--text-secondary);">'+v.su.toFixed(0)+'</td>';
+    body.appendChild(tr);
+  });
+}
+function renderBar(s) {
+  const sorted = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps);
+  if (barInst) { barInst.destroy(); barInst = null; }
+  barInst = new Chart(document.getElementById('barChart'), {
+    type: 'bar',
+    data: { labels: sorted.map(d=>d[0]), datasets: [{ label: 'PPS', data: sorted.map(d=>parseFloat(d[1].pps.toFixed(1))), backgroundColor: sorted.map(d=>COLORS[d[0]]), borderRadius: 4 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false, indexAxis: 'y',
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { min: 0, max: 100, grid: { color: 'rgba(61,42,26,0.08)' }, ticks: { font: { size: 12 }, color: '#6b5440' } },
+        y: { grid: { display: false }, ticks: { font: { size: 12 }, color: '#3d2a1a' } }
+      }
+    }
+  });
+}
+function renderRadar(s) {
+  const top3 = Object.entries(s).sort((a,b)=>b[1].pps-a[1].pps).slice(0,3);
+  if (radarInst) { radarInst.destroy(); radarInst = null; }
+  radarInst = new Chart(document.getElementById('radarChart'), {
+    type: 'radar',
+    data: {
+      labels: ['Compressive SAI','Water absorption','Sorptivity','Sulfate resist.'],
+      datasets: top3.map(([id,v])=>({
+        label: id,
+        data: [v.sai, v.wa, v.sp, v.su].map(x=>parseFloat(x.toFixed(1))),
+        borderColor: COLORS[id], backgroundColor: COLORS[id]+'22',
+        pointBackgroundColor: COLORS[id], borderWidth: 2, pointRadius: 4
+      }))
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      scales: { r: { min: 0, max: 100, ticks: { display: false }, grid: { color: 'rgba(61,42,26,0.12)' }, angleLines: { color: 'rgba(61,42,26,0.12)' }, pointLabels: { font: { size: 12 }, color: '#6b5440' } } },
+      plugins: { legend: { position: 'bottom', labels: { font: { size: 13 }, color: '#3d2a1a', boxWidth: 12, padding: 16 } } }
+    }
+  });
+}
+function activePanel() {
+  const el = document.querySelector('.pps-panel.visible');
+  return el ? el.id.replace('panel-','') : 'rank';
+}
+function update() {
+  const w = getWeights();
+  const total = w.reduce((a,b)=>a+b,0);
+  document.getElementById('wtotal').textContent = total;
+  document.getElementById('wwarn').style.display = total!==100 ? 'inline' : 'none';
+  ['w1','w2','w3','w4'].forEach((id,i)=>{ document.getElementById(id+'v').textContent = w[i]+'%'; });
+  if (total!==100) return;
+  const s = computeScores(currentAge, w);
+  renderRank(s);
+  const p = activePanel();
+  if (p==='bar') renderBar(s);
+  if (p==='radar') renderRadar(s);
+}
+function setAge(age) {
+  currentAge = age;
+  document.getElementById('age28').classList.toggle('active', age===28);
+  document.getElementById('age90').classList.toggle('active', age===90);
+  update();
+}
+document.getElementById('age28').addEventListener('click', ()=>setAge(28));
+document.getElementById('age90').addEventListener('click', ()=>setAge(90));
+['w1','w2','w3','w4'].forEach(id => document.getElementById(id).addEventListener('input', update));
+document.querySelectorAll('.pps-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.pps-tab').forEach(t=>t.classList.remove('active'));
+    document.querySelectorAll('.pps-panel').forEach(p=>p.classList.remove('visible'));
+    tab.classList.add('active');
+    const name = tab.dataset.panel;
+    document.getElementById('panel-'+name).classList.add('visible');
+    const s = computeScores(currentAge, getWeights());
+    if (name==='bar') renderBar(s);
+    if (name==='radar') renderRadar(s);
+  });
+});
+update();
+</script>
+</body>
+</html>
